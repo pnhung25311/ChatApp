@@ -25,6 +25,13 @@ app.use(cors({
 app.use("/api/auth", authRouter)
 app.use("/api/messages", messageRouter)
 
+if(process.env.NODE_ENV==="production"){
+  app.use(express.static(path.join(__dirname, "../../front-end/chatapp/dist")))
+  app.get("*", (req,res)=>{
+    res.sendFile(path.join(__dirname, "../../front-end/chatapp", "dist", "index.html"))
+  })
+}
+
 const PORT = process.env.PORT
 server.listen(PORT, () => {
     console.log("run server" + PORT);
