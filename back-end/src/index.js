@@ -11,7 +11,11 @@ import {app, server} from './lib/soket.js'
 
 dotenv.config();
 // const app = express();
-const __dirname = path.resolve();
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
@@ -27,11 +31,15 @@ app.use(cors({
 app.use("/api/auth", authRouter)
 app.use("/api/messages", messageRouter)
 
-if(process.env.NODE_ENV==="production"){
-  app.use(express.static(path.join(__dirname, "../../front-end/chatapp/dist")))
-  app.get("*", (req,res)=>{
-    res.sendFile(path.join(__dirname, "../../front-end/chatapp", "dist", "index.html"))
-  })
+if (process.env.NODE_ENV === "production") {
+  app.use(
+    express.static(path.join(__dirname, "../../../front-end/chatapp/dist"))
+  );
+  app.get("*", (req, res) => {
+    res.sendFile(
+      path.join(__dirname, "../../../front-end/chatapp/dist/index.html")
+    );
+  });
 }
 
 const PORT = process.env.PORT
